@@ -54,13 +54,9 @@ void TextGenerator::addWords(const std::string &str)
 }
 
 
-string TextGenerator::generateText()
+string TextGenerator::generateWords(const int count)
 {
-	const int count = 40;
 	const int vec_length = m_words.size();
-
-	//DEBUG
-	cerr<<"Num of words: "<<vec_length<<endl;
 
 	string output;
 	vector<string> temp;

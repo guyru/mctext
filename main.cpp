@@ -29,11 +29,12 @@ using namespace std;
 
 int main (int argc, char **argv)
 {
-	po::options_description desc("Allowed desc");
+	po::options_description desc("Options");
         desc.add_options()
             ("help,h", "produce this help message")
             ("version", "prints version string")
 	    ("input-file", po::value<string>(), "sample text input file")
+	    ("num-of-words,w", po::value<int>()->default_value(40), "how many words should be generated")
         ;
 	po::positional_options_description p;
 	p.add("input-file", 1);
@@ -79,7 +80,7 @@ int main (int argc, char **argv)
 		}
 		file.close();
 
-		cout<<gen.generateText()<<endl;
+		cout<<gen.generateWords(vm["num-of-words"].as<int>())<<endl;
 	}
 
 	return 0;

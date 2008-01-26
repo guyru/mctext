@@ -28,7 +28,7 @@ class TextGenerator {
 public:
 	TextGenerator();
 	void addWords(const std::string &str);
-	std::string generateText();
+	std::string generateWords(int count);
 private:
 	std::string stripChars(std::string str);
 	std::vector<std::string> m_words;
