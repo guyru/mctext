@@ -69,8 +69,17 @@ int main (int argc, char **argv)
 		if (!file.is_open()) {
 			cerr<<"Error openning specified file"<<endl;
 		}
-		TextGenerator gen(file);
-		gen.generateText();
+
+		TextGenerator gen;
+
+		string line;
+		while (!file.eof()) {
+			getline(file, line);
+			gen.addWords(line);
+		}
+		file.close();
+
+		cout<<gen.generateText()<<endl;
 	}
 
 	return 0;

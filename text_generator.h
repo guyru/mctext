@@ -26,14 +26,13 @@
 
 class TextGenerator {
 public:
-	TextGenerator(std::ifstream &sample_file);
-	void sampleFile(std::ifstream &sample_file);
+	TextGenerator();
+	void addWords(const std::string &str);
 	std::string generateText();
 private:
-	void addLine(const std::string &str);
 	std::string stripChars(std::string str);
 	std::vector<std::string> m_words;
-	std::string m_sample_text;
+
 };
 
 #endif //TEXT_GENERATOR_H
