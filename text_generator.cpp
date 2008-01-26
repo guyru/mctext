@@ -17,61 +17,66 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-
-#include <iostream>
 #include <fstream>
-#include <boost/program_options.hpp>
-#include "text_generator.h"
-#include "config.h"
+#include <string>
+#include <vector>
+#include <sstream>
+#include <algorithm>
+#include <iostream>
+#include <boost/random/uniform_int.hpp>
+#include <boost/random/linear_congruential.hpp>
+#include <boost/random/variate_generator.hpp>
 
-namespace po = boost::program_options;
+#include "text_generator.h"
+
 using namespace std;
 
-int main (int argc, char **argv)
+/**
+ *\param sample_file an open stream to a file holding sample text.
+ */
+TextGenerator::TextGenerator(ifstream &sample_file)
 {
-	po::options_description desc("Allowed desc");
-        desc.add_options()
-            ("help,h", "produce this help message")
-            ("version", "prints version string")
-	    ("input-file", po::value<string>(), "sample text input file")
-        ;
-	po::positional_options_description p;
-	p.add("input-file", 1);
-	po::variables_map vm;
-	try {
-		po::store(po::command_line_parser(argc, argv).
-			options(desc).positional(p).run(), vm);
-	}
-	catch(po::too_many_positional_options_error &e)
-	{
-		///TODO print usage information
-		cerr<<e.what()<<endl;
-		return 1;
-	}
-	catch(po::unknown_option &e)
-	{
-		///TODO print usage information
-		cerr<<e.what()<<endl;
-		return 1;
-	}
-	po::notify(vm);
-	if (vm.count("help")) {
-		cout << desc << "\n";
-		return 0;
-	}
-	if (vm.count("version")) {
-		cout << PACKAGE_STRING << "\n";
-		return 0;
-	}
-	if (vm.count("input-file")) {
-		cout<<"Input file: "<< vm["input-file"].as<string>()<<endl;
-		ifstream file (vm["input-file"].as<string>().c_str());
-		if (!file.is_open()) {
-			cerr<<"Error openning specified file"<<endl;
-		}
-		TextGenerator gen(file);
-		gen.generateText();
-	}
+	sampleFile(sample_file);
+}
 
-	return 0;
+/**
+ *\param sample_file an open stream to a file holding sample text.
+ */
+void TextGenerator::sampleFile(ifstream &sample_file)
+{
+	string line;
+	while(! sample_file.eof()) {
+		getline(sample_file, line);
+		addLine(line);
+	}
+	
+        /*
+	 *for (vector<string>::iterator itr = m_words.begin(); itr != m_words.end(); ++itr) {
+	 *        cout<<*itr<<endl;	
+	 *}
+         */
+}
+
+/**
+ * This function takes a line, parses it into words (by whitespaces) and adds
+ * them to m_words
+ */
+void TextGenerator::addLine(const std::string &str)
+{
+	string buf;
+	stringstream ss(str);
+
+	while (ss >> buf)
+		m_words.push_back(buf);
+}
+
+
+string TextGenerator::generateText()
+{
+	const int count = 20;
+	const int vec_length = m_words.size();
+
+	boost::uniform_int<size_t> uni_dist(0, vec_length-1);
+	boost::variate_generator<boost::rand48, boost::uniform_int<size_t> >
+		rand(boost::rand48((int) time(NULL)), uni_dist);
 }
