@@ -27,61 +27,95 @@
 namespace po = boost::program_options;
 using namespace std;
 
+string usage();
+
 int main (int argc, char **argv)
 {
 	po::options_description desc("Options");
         desc.add_options()
-            ("help,h", "produce this help message")
-            ("version", "prints version string")
-	    ("input-file", po::value<string>(), "sample text input file")
-	    ("num-of-words,w", po::value<int>()->default_value(40), "how many words should be generated")
+		("help,h", "produce this help message")
+		("version", "prints version string")
+		("num-of-words,w", po::value<int>()->default_value(40), "how many words should be generated")
         ;
+
+	po::options_description hidden("Hidden options");
+	hidden.add_options()
+		("input-file", po::value<string>()->default_value("-"), "sample text input file")
+	;
+
+	po::options_description cmdline_options;
+	cmdline_options.add(desc).add(hidden);
+
 	po::positional_options_description p;
 	p.add("input-file", 1);
+
 	po::variables_map vm;
 	try {
 		po::store(po::command_line_parser(argc, argv).
-			options(desc).positional(p).run(), vm);
+			options(cmdline_options).positional(p).run(), vm);
 	}
 	catch(po::too_many_positional_options_error &e)
 	{
-		///TODO print usage information
 		cerr<<e.what()<<endl;
+		cerr<<usage();
 		return 1;
 	}
 	catch(po::unknown_option &e)
 	{
-		///TODO print usage information
-		cerr<<e.what()<<endl;
+		cerr<<PACKAGE<<": "<<e.what()<<endl;
+		cerr<<usage();
+		cerr<<"Try `"<<PACKAGE<<" --help' for more information."<<endl;
 		return 1;
 	}
 	po::notify(vm);
 	if (vm.count("help")) {
+		cout<<usage();
+		cout<<"Reads a sample text from file and generate new text based on it.\n\n";
 		cout << desc << "\n";
+		cout <<"With no FILE, or when FILE is -, read standard input.\n"<<endl;
+		cout <<"Report bugs to <"<< PACKAGE_BUGREPORT <<">"<<endl;
+
 		return 0;
 	}
 	if (vm.count("version")) {
 		cout << PACKAGE_STRING << "\n";
 		return 0;
 	}
-	if (vm.count("input-file")) {
-		cout<<"Input file: "<< vm["input-file"].as<string>()<<endl;
+
+	TextGenerator gen;
+	// read file (or stdin) and generate text
+	if (vm["input-file"].as<string>() == "-") {
+		string line;
+		while (!cin.eof()) {
+			getline(cin, line);
+			gen.addWords(line);
+		}
+	} else {
 		ifstream file (vm["input-file"].as<string>().c_str());
 		if (!file.is_open()) {
-			cerr<<"Error openning specified file"<<endl;
+			cerr<<"Error openning file: "<<vm["input-file"].as<string>()<<endl;
+			return 1;
 		}
-
-		TextGenerator gen;
-
 		string line;
 		while (!file.eof()) {
 			getline(file, line);
 			gen.addWords(line);
 		}
 		file.close();
-
-		cout<<gen.generateWords(vm["num-of-words"].as<int>())<<endl;
 	}
 
+	cout<<gen.generateWords(vm["num-of-words"].as<int>())<<endl;
+
 	return 0;
+}
+
+/**
+ * Prints usage information.
+ */
+string usage()
+{
+	string out = "Usage: ";
+	out += PACKAGE;
+	out += " [options] FILE\n";
+	return out;
 }
