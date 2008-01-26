@@ -1,0 +1,12 @@
+total 52
+-rw-r--r-- 1 guy users    39 2008-01-26 08:16 AUTHORS
+-rwxr-xr-x 1 guy users    69 2008-01-26 08:12 autogen.sh
+-rw-r--r-- 1 guy users     0 2008-01-26 08:17 ChangeLog
+-rw-r--r-- 1 guy users   108 2008-01-26 08:23 configure.ac
+-rw-r--r-- 1 guy users 18002 2008-01-26 08:13 COPYING
+-rw-r--r-- 1 guy users     0 2008-01-26 08:24 filelist
+-rw-r--r-- 1 guy users  9416 2008-01-26 08:13 INSTALL
+-rw-r--r-- 1 guy users    68 2008-01-26 08:24 main.cpp
+-rw-r--r-- 1 guy users    56 2008-01-26 08:12 Makefile.am
+-rw-r--r-- 1 guy users     0 2008-01-26 08:16 NEWS
+-rw-r--r-- 1 guy users     0 2008-01-26 08:16 README
