@@ -1,5 +1,5 @@
 # Process this file with autoconf to produce a configure script.
-AC_INIT([mctext], [0.1], [guyrutenberg@gmail.com])
+AC_INIT([mctext], [0.2], [guyrutenberg@gmail.com])
 AM_INIT_AUTOMAKE([-Wall -Werror])
 AC_CONFIG_SRCDIR([main.cpp])
 AC_CONFIG_HEADER([config.h])

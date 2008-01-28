@@ -36,6 +36,7 @@ int main (int argc, char **argv)
 		("help,h", "produce this help message")
 		("version", "prints version string")
 		("num-of-words,w", po::value<int>()->default_value(40), "how many words should be generated")
+		("steps,s", po::value<int>()->default_value(2), "the number of steps used in the Markov chain.")
         ;
 
 	po::options_description hidden("Hidden options");
@@ -70,7 +71,7 @@ int main (int argc, char **argv)
 	po::notify(vm);
 	if (vm.count("help")) {
 		cout<<usage();
-		cout<<"Reads a sample text from file and generate new text based on it.\n\n";
+		cout<<"Reads a sample text from file and generate new text based on it using Markov chains.\n\n";
 		cout << desc << "\n";
 		cout <<"With no FILE, or when FILE is -, read standard input.\n"<<endl;
 		cout <<"Report bugs to <"<< PACKAGE_BUGREPORT <<">"<<endl;
@@ -104,7 +105,9 @@ int main (int argc, char **argv)
 		file.close();
 	}
 
-	cout<<gen.generateWords(vm["num-of-words"].as<int>())<<endl;
+	int num_words = vm["num-of-words"].as<int>();
+	int num_steps = vm["steps"].as<int>();
+	cout<<gen.generateWords(num_words, num_steps)<<endl;
 
 	return 0;
 }

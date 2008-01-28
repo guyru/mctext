@@ -54,7 +54,7 @@ void TextGenerator::addWords(const std::string &str)
 }
 
 
-string TextGenerator::generateWords(const int count)
+string TextGenerator::generateWords(int count, const int steps)
 {
 	const int vec_length = m_words.size();
 
@@ -62,7 +62,7 @@ string TextGenerator::generateWords(const int count)
 	vector<string> temp;
 	
 	//TODO move the random number generator from here to a class member
-	boost::uniform_int<size_t> uni_dist(0, vec_length-2);
+	boost::uniform_int<size_t> uni_dist(0, vec_length-steps);
 	boost::variate_generator<boost::rand48, boost::uniform_int<size_t> >
 		rand(boost::rand48((int) time(NULL)), uni_dist);
 
@@ -73,24 +73,30 @@ string TextGenerator::generateWords(const int count)
 	//TODO check if we can give up on one of the random number generators
 	
 	int initial_rand = rand();
-	temp.push_back(m_words[initial_rand]);	
-	temp.push_back(m_words[initial_rand+1]);
-
+	for (int i=0; i<steps && count>0; ++i) {
+		temp.push_back(m_words[initial_rand+i]);	
+		--count;
+	}
 	vector< vector<string>::iterator > itr_vec; //this will hold iterator to results
+
 	for (int i = count; i>0 ; --i) {
 		itr_vec.clear();
 		vector<string>::iterator last_it = m_words.begin();
 
-		last_it = search(last_it, m_words.end()-1, temp.end()-2, temp.end());
+		last_it = search(last_it, m_words.end()-1, temp.end()-steps, temp.end());
+
 		while (last_it != m_words.end()) {
-			itr_vec.push_back(last_it+2);
-			last_it = search(last_it+1, m_words.end(), temp.end()-2, temp.end());
+			itr_vec.push_back(last_it+steps);
+			last_it = search(last_it+1, m_words.end(), temp.end()-steps, temp.end());
 		}
 		if (itr_vec.size()==0) { 
 			cerr<<"debug: don't know how to continue - "<<temp.size()<<endl;
 			initial_rand = rand();
-			temp.push_back(m_words[initial_rand]);	
-			temp.push_back(m_words[initial_rand+1]);
+			for (int j=0; i<steps, i>0; ++j) {
+				temp.push_back(m_words[initial_rand+i]);	
+				--i;
+			}
+			continue;
 		}
 		temp.push_back( *(itr_vec[ randint()%itr_vec.size() ] ) ); //there is probably better way to code this
 	}
