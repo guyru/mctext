@@ -83,13 +83,13 @@ int main (int argc, char **argv)
 		return 0;
 	}
 
-	TextGenerator gen;
+	TextGenerator *gen = new DefaultTextGenerator();
 	// read file (or stdin) and generate text
 	if (vm["input-file"].as<string>() == "-") {
 		string line;
 		while (!cin.eof()) {
 			getline(cin, line);
-			gen.addWords(line);
+			gen->addWords(line);
 		}
 	} else {
 		ifstream file (vm["input-file"].as<string>().c_str());
@@ -100,14 +100,14 @@ int main (int argc, char **argv)
 		string line;
 		while (!file.eof()) {
 			getline(file, line);
-			gen.addWords(line);
+			gen->addWords(line);
 		}
 		file.close();
 	}
 
 	int num_words = vm["num-of-words"].as<int>();
 	int num_steps = vm["steps"].as<int>();
-	cout<<gen.generateWords(num_words, num_steps)<<endl;
+	cout<<gen->generateWords(num_words, num_steps)<<endl;
 
 	return 0;
 }

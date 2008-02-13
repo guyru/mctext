@@ -26,7 +26,15 @@
 
 class TextGenerator {
 public:
-	TextGenerator();
+	virtual void addWords(const std::string &str) = 0 ;
+	virtual std::string generateWords(int count, int steps) = 0;
+private:
+
+};
+
+class DefaultTextGenerator : public TextGenerator {
+public:
+	DefaultTextGenerator();
 	void addWords(const std::string &str);
 	std::string generateWords(int count, int steps);
 private:

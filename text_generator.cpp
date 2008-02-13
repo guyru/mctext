@@ -34,7 +34,7 @@ using namespace std;
 /**
  *\param sample_file an open stream to a file holding sample text.
  */
-TextGenerator::TextGenerator()
+DefaultTextGenerator::DefaultTextGenerator()
 {
 	//TODO initialize the random number generator here;
 }
@@ -43,7 +43,7 @@ TextGenerator::TextGenerator()
  * This function takes a string of words, and adds them into the sample text
  * base
  */
-void TextGenerator::addWords(const std::string &str)
+void DefaultTextGenerator::addWords(const std::string &str)
 {
 	string buf;
 	stringstream ss(str);
@@ -54,7 +54,7 @@ void TextGenerator::addWords(const std::string &str)
 }
 
 
-string TextGenerator::generateWords(int count, const int steps)
+string DefaultTextGenerator::generateWords(int count, const int steps)
 {
 	const int vec_length = m_words.size();
 
