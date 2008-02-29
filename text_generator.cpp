@@ -26,6 +26,7 @@
 #include <boost/random/uniform_int.hpp>
 #include <boost/random/linear_congruential.hpp>
 #include <boost/random/variate_generator.hpp>
+#include <limits>
 
 #include "text_generator.h"
 
@@ -67,7 +68,7 @@ string DefaultTextGenerator::generateWords(int count, const int steps)
 		rand(boost::rand48((int) time(NULL)), uni_dist);
 
 	//this is for randomizing the search order
-	boost::uniform_int<size_t> uni_int(0, -1);
+	boost::uniform_int<size_t> uni_int(0, std::numeric_limits<int>::max());
 	boost::variate_generator<boost::rand48, boost::uniform_int<size_t> >
 		randint(boost::rand48((int) time(NULL)), uni_int);
 	//TODO check if we can give up on one of the random number generators
@@ -85,15 +86,15 @@ string DefaultTextGenerator::generateWords(int count, const int steps)
 
 		last_it = search(last_it, m_words.end()-1, temp.end()-steps, temp.end());
 
-		while (last_it != m_words.end()) {
+		while (last_it != (m_words.end()-1)) {
 			itr_vec.push_back(last_it+steps);
-			last_it = search(last_it+1, m_words.end(), temp.end()-steps, temp.end());
+			last_it = search(last_it+1, m_words.end()-1, temp.end()-steps, temp.end());
 		}
 		if (itr_vec.size()==0) { 
 			cerr<<"debug: don't know how to continue - "<<temp.size()<<endl;
 			initial_rand = rand();
-			for (int j=0; i<steps, i>0; ++j) {
-				temp.push_back(m_words[initial_rand+i]);	
+			for (int j=0; j<steps && i>0; ++j) {
+				temp.push_back(m_words[initial_rand+j]);	
 				--i;
 			}
 			continue;
