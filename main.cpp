@@ -80,6 +80,10 @@ int main (int argc, char **argv)
 	}
 	if (vm.count("version")) {
 		cout << PACKAGE_STRING << "\n";
+		cout << "Copyright (C) 2008 Guy Rutenberg.\n";
+		cout << "This is free software; see the source for copying "
+			"conditions.  There is NO\nwarranty; not even for "
+			"MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n";
 		return 0;
 	}
 
