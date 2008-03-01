@@ -22,6 +22,7 @@
 #include <vector>
 #include <sstream>
 #include <algorithm>
+#include <exception>
 #include <iostream>
 #include <boost/random/uniform_int.hpp>
 #include <boost/random/linear_congruential.hpp>
@@ -58,6 +59,10 @@ void DefaultTextGenerator::addWords(const std::string &str)
 string DefaultTextGenerator::generateWords(int count, const int steps)
 {
 	const int vec_length = m_words.size();
+	if (vec_length < steps) {
+		runtime_error e("Sample text too short");
+		throw e;
+	}
 
 	string output;
 	vector<string> temp;
@@ -91,7 +96,7 @@ string DefaultTextGenerator::generateWords(int count, const int steps)
 			last_it = search(last_it+1, m_words.end()-1, temp.end()-steps, temp.end());
 		}
 		if (itr_vec.size()==0) { 
-			cerr<<"debug: don't know how to continue - "<<temp.size()<<endl;
+			//cerr<<"debug: don't know how to continue - "<<temp.size()<<endl;
 			initial_rand = rand();
 			for (int j=0; j<steps && i>0; ++j) {
 				temp.push_back(m_words[initial_rand+j]);	
