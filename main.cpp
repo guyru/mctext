@@ -87,6 +87,12 @@ int main (int argc, char **argv)
 		return 0;
 	}
 
+	if (vm["steps"].as<int>()<1) {
+		cerr<<"The number of steps must be positive value"<<endl;
+		cerr<<usage();
+		return 1;
+	}
+
 	TextGenerator *gen = new DefaultTextGenerator();
 	// read file (or stdin) and generate text
 	if (vm["input-file"].as<string>() == "-") {
